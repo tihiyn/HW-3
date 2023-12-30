@@ -1,8 +1,8 @@
 package model;
 
-import model.Animal;
-
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.Objects;
 
 public abstract class AbstractAnimal implements Animal {
     // порода животного
@@ -13,12 +13,15 @@ public abstract class AbstractAnimal implements Animal {
     protected BigDecimal cost;
     // характер животного
     protected String character;
+    // день рождения животного в формате dd-MM-yyyy
+    protected LocalDate birthDate;
 
-    public AbstractAnimal(String breed, String name, BigDecimal cost, String character) {
+    public AbstractAnimal(String breed, String name, BigDecimal cost, String character, LocalDate birthDate) {
         this.breed = breed;
         this.name = name;
         this.cost = cost;
         this.character = character;
+        this.birthDate = birthDate;
     }
 
     // реализация геттеров
@@ -40,5 +43,19 @@ public abstract class AbstractAnimal implements Animal {
     @Override
     public String getCharacter() {
         return character;
+    }
+
+    @Override
+    public LocalDate getBirthDate() {
+        return birthDate;
+    }
+
+    // переопределённая версия метода equals, которая сравнивает объекты по всем полям
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AbstractAnimal that = (AbstractAnimal) o;
+        return Objects.equals(breed, that.breed) && Objects.equals(name, that.name) && Objects.equals(cost, that.cost) && Objects.equals(character, that.character) && Objects.equals(birthDate, that.birthDate);
     }
 }

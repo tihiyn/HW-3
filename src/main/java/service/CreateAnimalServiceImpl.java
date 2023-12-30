@@ -1,23 +1,43 @@
 package service;
 
+import model.Animal;
+
 public class CreateAnimalServiceImpl implements CreateAnimalService {
-    // переопределённый метод для создания животных при помощи цикла do-while
+    /**
+     * Переопределённый метод для создания животных при помощи цикла do-while
+     *
+     * @Since: 1.1
+     * @Author: Nikita
+     */
     @Override
-    public void createAnimals() {
+    public Animal[] createAnimals() {
         // счётчик
         int counter = 1;
+        // массив животных
+        Animal[] animalsArray = new Animal[10];
 
         do {
-            commonCreating(counter);
+            animalsArray[counter - 1] = commonCreating(counter);
         }
         while (counter++ < 10);
+
+        return animalsArray;
     }
 
-    /* перегруженный метод для создания животных при
-    // помощи цикла for с заданным аргументом N - количество животных*/
-    public void createAnimals(int N) {
+    /**
+     * Перегруженный метод для создания животных при помощи цикла for.
+     *  Аргументы: N - количество животных, которое необходимо создать
+     *
+     * @Since: 1.1
+     * @Author: Nikita
+     */
+    public Animal[] createAnimals(int N) {
+        // массив животных
+        Animal[] animalsArray = new Animal[N];
         for (int i = 0; i < N; i++) {
-            commonCreating(i + 1);
+            animalsArray[i] = commonCreating(i + 1);
         }
+
+        return animalsArray;
     }
 }
