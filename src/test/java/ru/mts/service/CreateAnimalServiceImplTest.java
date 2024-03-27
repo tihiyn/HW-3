@@ -20,6 +20,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ThreadLocalRandom;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -32,7 +33,7 @@ import static org.mockito.Mockito.when;
 @ActiveProfiles("test")
 public class CreateAnimalServiceImplTest {
     Animal cat1, cat2, cat3, dog1, wolf1, wolf2, shark1;
-    Map<AnimalEnum, List<Animal>> animals;
+    ConcurrentHashMap<AnimalEnum, List<Animal>> animals;
 
     private AnimalsRepository animalsRepository;
     @Autowired
@@ -63,7 +64,7 @@ public class CreateAnimalServiceImplTest {
 
     @DisplayName("Test methods for creating animals")
     @ParameterizedTest(name = "Test {arguments}")
-    @ValueSource(ints = {0, 1, 2, 3, 4, 5, 6, 7})
+    @ValueSource(ints = {0, 1, 2, 3, 4, 5})
     public void starterTest(int value) {
         animalsRepository = new AnimalsRepositoryImpl(createAnimalService);
 
@@ -72,7 +73,7 @@ public class CreateAnimalServiceImplTest {
         doCallRealMethod().when(createAnimalService).defineTypeOfAnimals();
 
         initAnimals();
-        animals = new HashMap<>(4);
+        animals = new ConcurrentHashMap<>();
         switch (value) {
             case 0:
                 animals.put(AnimalEnum.CAT, Arrays.asList(cat1, cat3, cat2));
@@ -98,21 +99,9 @@ public class CreateAnimalServiceImplTest {
                 animals.put(AnimalEnum.SHARK, new ArrayList<>());
                 break;
             case 4:
-                animals.put(AnimalEnum.CAT, null);
-                animals.put(AnimalEnum.DOG, new ArrayList<>());
-                animals.put(AnimalEnum.WOLF, new ArrayList<>());
-                animals.put(AnimalEnum.SHARK, new ArrayList<>());
-                break;
-            case 5:
-                animals.put(null, Arrays.asList(cat1));
-                animals.put(AnimalEnum.DOG, Arrays.asList(dog1));
-                animals.put(AnimalEnum.WOLF, new ArrayList<>());
-                animals.put(AnimalEnum.SHARK, new ArrayList<>());
-                break;
-            case 6:
                 animals = null;
                 break;
-            case 7:
+            case 5:
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + value);
@@ -120,7 +109,7 @@ public class CreateAnimalServiceImplTest {
 
         when(createAnimalService.createAnimals()).thenReturn(animals);
 
-        if (value == 4 || value == 6) {
+        if (value == 4) {
             assertThrows(NullPointerException.class, () -> {
                 createAnimalServiceBeanPostProcessor.postProcessAfterInitialization(createAnimalService, "createAnimalService");
             });

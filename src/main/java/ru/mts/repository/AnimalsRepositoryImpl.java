@@ -3,6 +3,7 @@ package ru.mts.repository;
 import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Repository;
 import ru.mts.exceptions.IllegalCollectionSizeException;
 import ru.mts.exceptions.NegativeArgumentException;
@@ -17,14 +18,18 @@ import java.time.Period;
 import java.time.Year;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Repository
+@Scope("prototype")
 public class AnimalsRepositoryImpl implements AnimalsRepository {
 
     private static Logger logger = LoggerFactory.getLogger(AnimalsRepositoryImpl.class);
 
-    private Map<AnimalEnum, List<Animal>> animalStorage;
+//    private Map<AnimalEnum, List<Animal>> animalStorage;
+    private ConcurrentHashMap<AnimalEnum, List<Animal>> animalStorage;
 
     private CreateAnimalService createAnimalService;
 
@@ -62,7 +67,7 @@ public class AnimalsRepositoryImpl implements AnimalsRepository {
                 .flatMap(entry -> entry.getValue().stream()
                         .filter(animal -> Year.of(animal.getBirthDate().getYear()).isLeap())
                         .map(animal -> Map.entry(entry.getKey().toString() + " " + animal.getName(), animal.getBirthDate())))
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (existing, replacement) -> existing));
     }
 
     @Override

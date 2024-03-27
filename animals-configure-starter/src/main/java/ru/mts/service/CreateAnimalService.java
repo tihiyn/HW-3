@@ -5,6 +5,8 @@ import ru.mts.model.AnimalEnum;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public interface CreateAnimalService {
     List<String> breeds = List.of("Британская", "Шотландская", "Сфинкс", "Немецкая овчарка", "Доберман", "Лабрадор", "Тигровая", "Белая", "Молот", "Полярный", "Ньюфаундлендский", "Японский");
@@ -22,27 +24,27 @@ public interface CreateAnimalService {
     /**
      * Метод для создания животных при помощи цикла do-while
      *
-     * @return HashMap с созданными животными
+     * @return ConcurrentHashMap с созданными животными
      * @author Nikita
      * @since 1.5
      */
-    Map<AnimalEnum, List<Animal>> createAnimals();
+    ConcurrentHashMap<AnimalEnum, List<Animal>> createAnimals();
 
     /**
      * Метод для получения списка типов животных
      *
-     * @return список типов созданных животных
+     * @return  потокобезопасный список типов созданных животных
      * @author Nikita
      * @since 1.4
      */
-    List<AnimalEnum> receiveAnimalTypes();
+    CopyOnWriteArrayList<AnimalEnum> receiveAnimalTypes();
 
     /**
      * Метод для получения созданных животных
      *
-     * @return HashMap из созданных животных
+     * @return ConcurrentHashMap из созданных животных
      * @author Nikita
      * @since 1.4
      */
-    Map<AnimalEnum, List<Animal>> receiveCreatedAnimals();
+    ConcurrentHashMap<AnimalEnum, List<Animal>> receiveCreatedAnimals();
 }
